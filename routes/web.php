@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\GroupController;
 
 
 /*
@@ -26,6 +28,13 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
+    Route::get('/tasks/', [TaskController::class, 'showAll'])->name('tasks');
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups');
+    Route::get('/groups/{id?}', [GroupController::class, 'show'])->name('groups.show');
+    Route::get('/groups/create', [GroupController::class, 'showCreateForm'])->name('groups.showCreateForm');
+    Route::post('/groups/create', [GroupController::class, 'create'])->name('groups.create');
+    Route::put('/groups/{id}', [GroupController::class, 'update'])->name('groups.update');
+    Route::delete('/groups/{id}', [GroupController::class, 'destroy'])->name('groups.destroy');
 });
 
 Route::middleware('auth')->group(function () {

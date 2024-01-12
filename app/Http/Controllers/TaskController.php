@@ -30,10 +30,19 @@ class TaskController extends Controller
         }
 
         // Pass the found task data to the 'tasks.show' view to render
-        return view('tasks.show', ['task' => $task]);
+        return view('tasks', ['task' => $task]);
     }
 
+    public function showAll()
+    {
+    // Logic to fetch all tasks using the Task model
+    $tasks = Task::all();
+
+    // Pass the tasks data to the 'tasks' view to render
+    return view('tasks', ['tasks' => $tasks]);
+
     // Other actions related to tasks
+    }
 
     public function store(Request $request)
     {
