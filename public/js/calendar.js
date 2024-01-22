@@ -330,92 +330,142 @@ addEventTo.addEventListener("input", (e) => {
 });
 
 //function to add event to eventsArr
-addEventSubmit.addEventListener("click", () => {
+addEventSubmit.addEventListener('click', () => {
+  // Get input values
   const eventTitle = addEventTitle.value;
   const eventTimeFrom = addEventFrom.value;
   const eventTimeTo = addEventTo.value;
-  if (eventTitle === "" || eventTimeFrom === "" || eventTimeTo === "") {
-    alert("Please fill all the fields");
-    return;
-  }
 
-  //check correct time format 24 hour
-  const timeFromArr = eventTimeFrom.split(":");
-  const timeToArr = eventTimeTo.split(":");
-  if (
-    timeFromArr.length !== 2 ||
-    timeToArr.length !== 2 ||
-    timeFromArr[0] > 23 ||
-    timeFromArr[1] > 59 ||
-    timeToArr[0] > 23 ||
-    timeToArr[1] > 59
-  ) {
-    alert("Invalid Time Format");
-    return;
-  }
-
-  const timeFrom = convertTime(eventTimeFrom);
-  const timeTo = convertTime(eventTimeTo);
-
-  //check if event is already added
-  let eventExist = false;
-  eventsArr.forEach((event) => {
-    if (
-      event.day === activeDay &&
-      event.month === month + 1 &&
-      event.year === year
-    ) {
-      event.events.forEach((event) => {
-        if (event.title === eventTitle) {
-          eventExist = true;
-        }
-      });
-    }
-  });
-  if (eventExist) {
-    alert("Event already added");
-    return;
-  }
-  const newEvent = {
-    title: eventTitle,
-    time: timeFrom + " - " + timeTo,
-  };
-  console.log(newEvent);
-  console.log(activeDay);
-  let eventAdded = false;
-  if (eventsArr.length > 0) {
-    eventsArr.forEach((item) => {
-      if (
-        item.day === activeDay &&
-        item.month === month + 1 &&
-        item.year === year
-      ) {
-        item.events.push(newEvent);
-        eventAdded = true;
+  // Function to add event to eventsArr
+  const addEventToArr = () => {
+      // Check if any field is empty
+      if (eventTitle === '' || eventTimeFrom === '' || eventTimeTo === '') {
+          alert('Please fill in all the fields');
+          return;
       }
-    });
-  }
 
-  if (!eventAdded) {
-    eventsArr.push({
-      day: activeDay,
-      month: month + 1,
-      year: year,
-      events: [newEvent],
-    });
-  }
+      // Check the correct time format (24-hour)
+      const timeFromArr = eventTimeFrom.split(':');
+      const timeToArr = eventTimeTo.split(':');
+      if (
+          timeFromArr.length !== 2 ||
+          timeToArr.length !== 2 ||
+          timeFromArr[0] > 23 ||
+          timeFromArr[1] > 59 ||
+          timeToArr[0] > 23 ||
+          timeToArr[1] > 59
+      ) {
+          alert('Invalid Time Format');
+          return;
+      }
 
-  console.log(eventsArr);
-  addEventWrapper.classList.remove("active");
-  addEventTitle.value = "";
-  addEventFrom.value = "";
-  addEventTo.value = "";
-  updateEvents(activeDay);
-  //select active day and add event class if not added
-  const activeDayEl = document.querySelector(".day.active");
-  if (!activeDayEl.classList.contains("event")) {
-    activeDayEl.classList.add("event");
-  }
+      // Create a new event object
+      const timeFrom = convertTime(eventTimeFrom);
+      const timeTo = convertTime(eventTimeTo);
+
+      // Check if the event is already added
+      let eventExist = false;
+      eventsArr.forEach((event) => {
+          if (
+              event.day === activeDay &&
+              event.month === month + 1 &&
+              event.year === year
+          ) {
+              event.events.forEach((event) => {
+                  if (event.title === eventTitle) {
+                      eventExist = true;
+                  }
+              });
+          }
+      });
+
+      if (eventExist) {
+          alert('Event already added');
+          return;
+      }
+
+      // Create a new event object
+      const newEvent = {
+          title: eventTitle,
+          time: timeFrom + ' - ' + timeTo,
+      };
+
+      console.log(newEvent);
+      console.log(activeDay);
+
+      let eventAdded = false;
+
+      // Check if the day is present in eventsArr and add the new event
+      if (eventsArr.length > 0) {
+          eventsArr.forEach((item) => {
+              if (
+                  item.day === activeDay &&
+                  item.month === month + 1 &&
+                  item.year === year
+              ) {
+                  item.events.push(newEvent);
+                  eventAdded = true;
+              }
+          });
+      }
+
+      // If the day is not present in eventsArr, create a new entry
+      if (!eventAdded) {
+          eventsArr.push({
+              day: activeDay,
+              month: month + 1,
+              year: year,
+              events: [newEvent],
+          });
+      }
+
+      console.log(eventsArr);
+
+      // Close the add event wrapper
+      addEventWrapper.classList.remove('active');
+
+      // Clear the input fields
+      addEventTitle.value = '';
+      addEventFrom.value = '';
+      addEventTo.value = '';
+
+      // Update events for the active day
+      updateEvents(activeDay);
+
+      // Select the active day and add the 'event' class if not added
+      const activeDayEl = document.querySelector('.day.active');
+      if (activeDayEl && !activeDayEl.classList.contains('event')) {
+          activeDayEl.classList.add('event');
+      }
+
+      // Send a POST request to store the event
+      fetch('/calendar/add-task', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          },
+          body: JSON.stringify({
+              day: activeDay,
+              month: month + 1,
+              year: year,
+              title: eventTitle,
+              timeFrom: eventTimeFrom,
+              timeTo: eventTimeTo,
+          }),
+      })
+          .then(response => response.json())
+          .then(data => {
+              // Call the handleResponse function with the actual server response
+              handleResponse(data);
+          })
+          .catch(error => {
+              console.error('Error:', error);
+          });
+  };
+
+  // Event listener for the "Add Event" button
+  addEventSubmit.addEventListener('click', addEventToArr);
 });
 
 //function to delete event when clicked on event
@@ -474,3 +524,144 @@ function convertTime(time) {
   time = timeHour + ":" + timeMin + " " + timeFormat;
   return time;
 }
+
+addEventSubmit.addEventListener("click", () => {
+  const eventTitle = addEventTitle.value;
+  const eventTimeFrom = addEventFrom.value;
+  const eventTimeTo = addEventTo.value;
+
+  
+  then(data => {
+    const handleResponse = (response) => {
+      // Check if the response was successful
+      if (response.status === 'success') {
+        // Update UI or perform actions based on success
+        console.log('Event added successfully:', response.message);
+    
+        // Close the add event wrapper
+        addEventWrapper.classList.remove('active');
+    
+        // Clear the input fields
+        addEventTitle.value = '';
+        addEventFrom.value = '';
+        addEventTo.value = '';
+    
+        // Update events for the active day
+        updateEvents(activeDay);
+    
+        // Select the active day and add the 'event' class if not added
+        const activeDayEl = document.querySelector('.day.active');
+        if (activeDayEl && !activeDayEl.classList.contains('event')) {
+          activeDayEl.classList.add('event');
+        }
+      } else {
+        // Handle the case when the response is not successful
+        console.error('Failed to add event:', response.message);
+        alert('Failed to add event. Please try again.'); // You can customize the error handling
+      }
+    };
+    
+    // Function to add event to eventsArr
+    const addEventToArr = () => {
+      const eventTitle = addEventTitle.value;
+      const eventTimeFrom = addEventFrom.value;
+      const eventTimeTo = addEventTo.value;
+    
+      // Check if any field is empty
+      if (eventTitle === '' || eventTimeFrom === '' || eventTimeTo === '') {
+        alert('Please fill in all the fields');
+        return;
+      }
+    
+      // Check the correct time format (24-hour)
+      const timeFromArr = eventTimeFrom.split(':');
+      const timeToArr = eventTimeTo.split(':');
+      if (
+        timeFromArr.length !== 2 ||
+        timeToArr.length !== 2 ||
+        timeFromArr[0] > 23 ||
+        timeFromArr[1] > 59 ||
+        timeToArr[0] > 23 ||
+        timeToArr[1] > 59
+      ) {
+        alert('Invalid Time Format');
+        return;
+      }
+    
+      // Create a new event object
+      const newEvent = {
+        title: eventTitle,
+        time: convertTime(eventTimeFrom) + ' - ' + convertTime(eventTimeTo),
+      };
+    
+      console.log(newEvent);
+      console.log(activeDay);
+    
+      // Find the day in eventsArr and add the new event
+      let eventAdded = false;
+      if (eventsArr.length > 0) {
+        eventsArr.forEach((item) => {
+          if (item.day === activeDay && item.month === month + 1 && item.year === year) {
+            item.events.push(newEvent);
+            eventAdded = true;
+          }
+        });
+      }
+    
+      // If the day is not present in eventsArr, create a new entry
+      if (!eventAdded) {
+        eventsArr.push({
+          day: activeDay,
+          month: month + 1,
+          year: year,
+          events: [newEvent],
+        });
+      }
+    
+      console.log(eventsArr);
+    
+      // Call the handleResponse function with a sample response (you should replace this with actual API response)
+      const sampleResponse = {
+        status: 'success',
+        message: 'Event added successfully!',
+      };
+      handleResponse(sampleResponse);
+    };
+    
+    // Event listener for the "Add Event" button
+    addEventSubmit.addEventListener('click', addEventToArr);
+  })
+  .catch(error => {
+    console.error('Fetch error:', error);
+  });
+
+  const handleResponse = (response) => {
+    // Check if the response was successful
+    if (response.status === 'success') {
+        // Update UI or perform actions based on success
+        console.log('Event added successfully:', response.message);
+
+        // Close the add event wrapper
+        addEventWrapper.classList.remove('active');
+
+        // Clear the input fields
+        addEventTitle.value = '';
+        addEventFrom.value = '';
+        addEventTo.value = '';
+
+        // Update events for the active day
+        updateEvents(activeDay);
+
+        // Select the active day and add the 'event' class if not added
+        const activeDayEl = document.querySelector('.day.active');
+        if (activeDayEl && !activeDayEl.classList.contains('event')) {
+            activeDayEl.classList.add('event');
+        }
+    } else {
+        // Handle the case when the response is not successful
+        console.error('Failed to add event:', response.message);
+        alert('Failed to add event. Please try again.');
+    }
+  };
+
+});

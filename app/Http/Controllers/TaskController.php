@@ -9,28 +9,29 @@ class TaskController extends Controller
 {
     public function index()
     {
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Get the tasks associated with the user
+        $tasks = $user->tasks;
+
         // Logic to show all tasks
 
         // Retrieve all tasks from the Task model
         $tasks = Task::all();
 
-        // Pass the tasks data to the 'tasks.index' view to render
-        return view('tasks.index', ['tasks' => $tasks]);
+        // Pass the tasks data to the 'tasks.tasks' view to render
+        return view('tasks.tasks', ['tasks' => $tasks]);
     }
 
     public function show($id)
     {
         // Logic to show a specific task by $id
         // Find the task by its ID using the Task model
-        $task = Task::find($id);
-
-        // If the task is not found, return a 404 error
-        if (!$task) {
-            return abort(404, 'Task not found');
-        }
+        $task = Task::findOrFail($id);
 
         // Pass the found task data to the 'tasks.show' view to render
-        return view('tasks', ['task' => $task]);
+        return view('tasks.show', ['task' => $task]);
     }
 
     public function showAll()
@@ -39,7 +40,7 @@ class TaskController extends Controller
     $tasks = Task::all();
 
     // Pass the tasks data to the 'tasks' view to render
-    return view('tasks', ['tasks' => $tasks]);
+    return view('tasks.tasks', ['tasks' => $tasks]);
 
     // Other actions related to tasks
     }
@@ -54,7 +55,7 @@ class TaskController extends Controller
         $task->description = $request->input('description');
         $task->save();
 
-        return redirect()->route('tasks.index')->with('success', 'Task created successfully');
+        return redirect()->route('tasks')->with('success', 'Task created successfully');
     }
 
     public function edit($id)
@@ -84,7 +85,7 @@ class TaskController extends Controller
         $task->description = $request->input('description');
         $task->save();
 
-        return redirect()->route('tasks.show', ['task' => $task])->with('success', 'Task updated successfully');
+        return redirect()->route('tasks', ['task' => $task])->with('success', 'Task updated successfully');
     }
 
     public function destroy($id)
@@ -99,6 +100,6 @@ class TaskController extends Controller
 
         $task->delete();
 
-        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully');
+        return redirect()->route('tasks')->with('success', 'Task deleted successfully');
     }
 }

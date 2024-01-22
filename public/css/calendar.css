@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.calendar {
+    /* Styles for the calendar container */
+    background-color: #2a2a2a; /* Dark background color */
+    color: #ffffff; /* Light text color */
+    padding: 20px; /* Add padding for a comfortable look */
+}
+
+.task-view {
+    /* Styles for the task view container */
+    border-bottom: 1px solid #3b3b3b; /* Separate tasks with a border */
+    padding: 10px; /* Add padding for a comfortable look */
+    width: 300px;
+}
+
+.sidebar {
+    /* Styles for the calendar sidebar */
+    background-color: #3a3a3a; /* Dark background color for the sidebar */
+    color: #ffffff; /* Light text color for the sidebar */
+    width: 200px; /* Adjust the width as needed */
+    padding: 20px; /* Add padding for a comfortable look */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+  }
