@@ -29,13 +29,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
+    Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar.index');
     Route::post('/calendar/add-task', [CalendarController::class, 'addTask'])->name('calendar.addTask');
-});
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/tasks', [TaskController::class, 'showAll'])->name('tasks');
-    Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
 });
 
 Route::middleware(['auth'])->group(function () {

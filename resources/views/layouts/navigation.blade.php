@@ -19,10 +19,6 @@
                     <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
                         {{ __('Calendar') }}
                     </x-nav-link>
-                    <!-- Tasks Link -->
-                    <x-nav-link :href="route('tasks')" :active="request()->routeIs('tasks')">
-                        {{ __('Tasks') }}
-                    </x-nav-link>
                     <!-- Groups Link -->
                     <x-nav-link :href="route('groups')" :active="request()->routeIs('groups')">
                         {{ __('Groups') }}
