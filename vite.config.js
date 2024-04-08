@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import Vue from '@vitejs/plugin-vue'
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
+import { createVuePlugin } from 'vite-plugin-vue2'; // Import Vue 2 plugin
+import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 
 export default defineConfig({
     plugins: [
@@ -13,7 +13,6 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        [Vue()]
+        createVuePlugin(), // Use Vue 2 plugin instead of Vue 3 plugin
     ],
 });
-

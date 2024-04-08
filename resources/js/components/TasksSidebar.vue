@@ -1,25 +1,24 @@
 <template>
-  <div class="tasks-sidebar">
-    <!-- Task list header -->
-    <div class="tasks-sidebar-header">
-      <h5>Tasks</h5>
-    </div>
-    <!-- Task list -->
-    <ul class="list-group">
-      <li class="list-group-item" v-for="task in tasks" :key="task.id">
-        {{ task.title }}
-      </li>
-    </ul>
-  </div>
+  <v-container fluid>
+    <v-list>
+      <v-list-item v-for="(event, index) in events" :key="index">
+        <v-list-item-content>
+          <v-list-item-title v-html="event.title"></v-list-item-title>
+          <v-list-item-subtitle v-html="event.start"></v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-container>
 </template>
 
 <script>
 export default {
+  name: 'TaskSidebar',
   props: {
-    tasks: {
+    events: {
       type: Array,
       required: true,
     },
   },
-};
+}
 </script>

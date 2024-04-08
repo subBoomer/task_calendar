@@ -18,11 +18,16 @@ class CalendarController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            $tasks = $user->tasks;
-            // Fetch events from the database
-            $events = $user->events;
-            // Pass tasks to the calendar view
-            return view('calendar.index', ['tasks' => $tasks, 'events' => $events]);
+            $tasks = $user->tasks->map(function ($task) {
+                return [
+                    'title' => $task->event_title,
+                    'start' => "$task->event_year-$task->event_month-$task->event_day $task->event_time_from",
+                    'end' => "$task->event_year-$task->event_month-$task->event_day $task->event_time_to",
+                    'id' => $task->id,
+                ];
+            })->toArray();
+            
+            return view('calendar.index', ['tasks' => $tasks]);
         }
 
         return redirect()->route('login');
