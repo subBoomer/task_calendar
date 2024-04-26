@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('calendar_events', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('type')->nullable(); // Type of task (e.g., Private, Company)
+            $table->string('title');
+            $table->string('location')->nullable(); // Added 'location' column after 'title'
+            $table->boolean('is_locked')->default(false); // Indicates if the event is locked
+            $table->dateTime('start');
+            $table->dateTime('end');
+            $table->boolean('is_all_day')->default(false); // Indicates if the event is all day
+            $table->string('availability')->nullable(); // Indicates if the user is busy or free
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('calendar_events');
+    }
+};
