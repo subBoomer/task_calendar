@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+// Define the structure of an Event object
 interface Event {
   id: number;
   title: string;
@@ -10,24 +11,27 @@ interface Event {
   end: string;
 }
 
+// Define a Pinia store for managing events
 export const useEventsStore = defineStore({
-  id: 'events',
+  id: 'events', // Unique identifier for the store
   state: () => ({
-    events: [] as Event[],
-    chosenEvents: ref<number[]>([]), // Initialize chosenEvents as an empty array
+    events: [] as Event[], // Array to store event objects
+    chosenEvents: ref<number[]>([]), // Ref to track the IDs of chosen events, initialized as an empty array
   }),
   actions: {
     addEvent(event: Event) {
-      this.events.push(event);
+      // Action to add an event to the store
+      this.events.push(event); // Push the new event object to the events array
     },
     toggleEvent(eventId: string | number) {
-      // Convert eventId to a number if it's a string
-      const parsedEventId = typeof eventId === 'string' ? parseInt(eventId, 10) : eventId;
-      const index = this.chosenEvents.value.indexOf(parsedEventId);
+      // Action to toggle the selection of an event
+      const parsedEventId = typeof eventId === 'string' ? parseInt(eventId, 10) : eventId; // Convert eventId to a number if it's a string
+      const index = this.chosenEvents.value.indexOf(parsedEventId); // Find the index of the event ID in the chosenEvents array
+      // If the event ID is not in the chosenEvents array, add it; otherwise, remove it
       if (index === -1) {
-          this.chosenEvents.value.push(parsedEventId);
+          this.chosenEvents.value.push(parsedEventId); // Add the event ID to the chosenEvents array
       } else {
-          this.chosenEvents.value.splice(index, 1);
+          this.chosenEvents.value.splice(index, 1); // Remove the event ID from the chosenEvents array
       }
     },
   },

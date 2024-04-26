@@ -7,22 +7,22 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  position: relative; /* Ensure the body serves as the positioning context */
+  position: relative;
 }
 
 #app {
   width: 100%;
   height: 100vh;
-  position: relative; /* Ensure the app serves as the positioning context */
+  position: relative;
 }
 
 .sx-vue-calendar-wrapper {
   position: absolute;
-  left: 400px; /* Adjust the position to leave space for the sidebar */
+  left: 400px;
   top: 0;
-  width: calc(100% - 400px); /* Adjust width based on sidebar width */
+  width: calc(100% - 400px);
   height: 100%; /* Occupy full height of the viewport */
-  z-index: 1; /* Ensure the calendar appears behind the sidebar */
+  z-index: 1;
 }
 /*
 .sidebar button.add-task-button {

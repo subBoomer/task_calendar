@@ -16,12 +16,8 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <!-- New Calendar Link -->
-                    <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
+                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')">
                         {{ __('Calendar') }}
-                    </x-nav-link>
-                    <!-- Groups Link -->
-                    <x-nav-link :href="route('groups')" :active="request()->routeIs('groups')">
-                        {{ __('Groups') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -78,7 +74,7 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')">
+            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')">
                 {{ __('Calendar') }}
             </x-responsive-nav-link>
         </div>

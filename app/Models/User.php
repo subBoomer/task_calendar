@@ -44,13 +44,4 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function groups()
-    {
-        return $this->belongsToMany(UserGroup::class, 'user_group_memberships', 'user_id', 'group_id');
-    }
-
-    public function tasks(): HasMany
-    {
-        return $this->hasMany(Task::class, 'user_id');
-    }
 }
